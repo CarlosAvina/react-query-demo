@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   text-align: left;
   font-family: Wotfard;
   padding: 0 10px;
+  max-width: 1000px;
 
   &:hover {
     cursor: pointer;
