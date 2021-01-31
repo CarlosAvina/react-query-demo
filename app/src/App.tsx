@@ -4,7 +4,6 @@ import "./App.css";
 
 import TopBar from "./components/TopBar";
 import NotesPage from "./screens/NotesPage";
-import EditNotePage from "./screens/EditNotePage";
 
 function App() {
   const [currentApp, setCurrentApp] = React.useState("notes");
@@ -22,9 +21,6 @@ function App() {
             <Switch>
               <Route exact path="/">
                 <NotesPage />
-              </Route>
-              <Route path="/edit">
-                <EditNotePage />
               </Route>
             </Switch>
           ) : (
