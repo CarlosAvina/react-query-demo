@@ -5,6 +5,7 @@ const Input = styled.input`
   height: 50px;
   border-style: solid;
   border-radius: 10px;
+  padding: 0 10px;
 
   outline: none;
 
@@ -19,8 +20,22 @@ const Input = styled.input`
   }
 `;
 
-const InputComponent: React.FC = () => {
-  return <Input type="text" />;
+interface Props {
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
+}
+
+const InputComponent: React.FC<Props> = (props) => {
+  const { value, onChange, placeholder } = props;
+  return (
+    <Input
+      type="text"
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+    />
+  );
 };
 
 export default InputComponent;
