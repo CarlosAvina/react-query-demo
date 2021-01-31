@@ -20,9 +20,10 @@ interface IListItem {
 
 interface Props {
   items: Array<IListItem>;
+  onClickItem: (title: string, body: string) => void;
 }
 
-const List: React.FC<Props> = ({ items }) => {
+const List: React.FC<Props> = ({ items, onClickItem }) => {
   return (
     <Wrapper>
       {items.map((item) => (
@@ -30,6 +31,7 @@ const List: React.FC<Props> = ({ items }) => {
           className="item"
           title={item.title}
           preview={item.preview}
+          onClick={onClickItem}
           key={Math.random()}
         />
       ))}

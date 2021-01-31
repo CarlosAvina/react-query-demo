@@ -37,12 +37,18 @@ const Wrapper = styled.div`
 interface Props {
   title: string;
   preview: string;
+  onClick: (title: string, body: string) => void;
   className: string;
 }
 
-const ListItem: React.FC<Props> = ({ title, preview, ...otherProps }) => {
+const ListItem: React.FC<Props> = ({
+  title,
+  preview,
+  onClick,
+  ...otherProps
+}) => {
   return (
-    <Wrapper {...otherProps}>
+    <Wrapper {...otherProps} onClick={() => onClick(title, preview)}>
       <h3>{title}</h3>
       <p>{preview}</p>
     </Wrapper>
