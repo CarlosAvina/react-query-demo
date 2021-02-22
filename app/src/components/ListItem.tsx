@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   font-family: Wotfard;
   padding: 0 10px;
   max-width: 1000px;
+  min-width: 500px;
 
   &:hover {
     cursor: pointer;
@@ -35,20 +36,26 @@ const Wrapper = styled.div`
 `;
 
 interface Props {
+  id: string;
   title: string;
   preview: string;
-  onClick: (title: string, body: string) => void;
+  onClick: (id: string, title: string, body: string) => void;
   className: string;
 }
 
 const ListItem: React.FC<Props> = ({
+  id,
   title,
   preview,
   onClick,
   ...otherProps
 }) => {
   return (
-    <Wrapper {...otherProps} onClick={() => onClick(title, preview)}>
+    <Wrapper
+      {...otherProps}
+      id={id}
+      onClick={() => onClick(id, title, preview)}
+    >
       <h3>{title}</h3>
       <p>{preview}</p>
     </Wrapper>

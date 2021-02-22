@@ -1,17 +1,21 @@
 import * as React from "react";
 import Modal from "react-modal";
 import styled from "styled-components";
-import data from "../mocks/data";
+import { useQuery, useMutation } from "react-query";
 
 import List from "../components/List";
 import AddNoteButton from "../components/AddNoteButton";
 import Input from "../components/Input";
 import TextArea from "../components/TextArea";
 import Button from "../components/Button";
+import Loader from "../components/Loader";
+
+import { getNotes, createNote } from "../api/notes";
 
 Modal.setAppElement("#root");
 
 const Wrapper = styled.div`
+  align-self: center;
   .new-note {
     position: fixed;
     right: 20px;
@@ -49,38 +53,70 @@ const NoteForm = styled.div`
   }
 `;
 
+interface IListNotes {
+  _id: string;
+  title: string;
+  body: string;
+}
+
 const EditNotePage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [title, setTitle] = React.useState("");
-  const [body, setBody] = React.useState("");
+  const [note, setNote] = React.useState({ id: "", title: "", body: "" });
+
+  const { data, isLoading, error, refetch } = useQuery<IListNotes[], Error>(
+    "notes",
+    getNotes
+  );
+  const createNoteMutation = useMutation(
+    (value: { title: string; body: string }) =>
+      createNote(value.title, value.body)
+  );
 
   function handleOpenModal() {
-    setTitle("");
-    setBody("");
+    setNote({ id: "", title: "", body: "" });
     setModalOpen(true);
+  }
+
+  function handleTitle(event: React.ChangeEvent<HTMLInputElement>) {
+    setNote((prevNote) => ({ ...prevNote, title: event.target.value }));
+  }
+
+  function handleBody(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setNote((prevNote) => ({ ...prevNote, body: event.target.value }));
+  }
+
+  function handleItemClick(id: string, title: string, body: string) {
+    setModalOpen(true);
+    setNote({ id, title, body });
   }
 
   function handleCloseModal() {
     setModalOpen(false);
   }
 
-  function handleTitle(event: React.ChangeEvent<HTMLInputElement>) {
-    setTitle(event.target.value);
-  }
+  function handleSaveNote() {
+    const { title, body } = note;
 
-  function handleBody(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setBody(event.target.value);
-  }
+    createNoteMutation.mutate({ title, body });
 
-  function handleItemClick(title: string, body: string) {
-    setModalOpen(true);
-    setTitle(title);
-    setBody(body);
+    setModalOpen(false);
   }
 
   return (
     <Wrapper>
-      <List items={data} onClickItem={handleItemClick} />
+      {createNoteMutation.isLoading && <h1>Loading...</h1>}
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <div>
+          <h1>{error.message}</h1>
+          <button type="button" onClick={() => refetch()}>
+            Retry
+          </button>
+        </div>
+      ) : (
+        <List items={data} onClickItem={handleItemClick} />
+      )}
       <AddNoteButton className="new-note" onClick={handleOpenModal} />
       <Modal
         isOpen={modalOpen}
@@ -94,13 +130,21 @@ const EditNotePage: React.FC = () => {
               <Button className="cancel-button" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button className="add-button" onClick={handleCloseModal}>
+              <Button className="add-button" onClick={handleSaveNote}>
                 Add
               </Button>
             </div>
           </div>
-          <Input placeholder="Title" value={title} onChange={handleTitle} />
-          <TextArea placeholder="Body" value={body} onChange={handleBody} />
+          <Input
+            placeholder="Title"
+            value={note.title}
+            onChange={handleTitle}
+          />
+          <TextArea
+            placeholder="Body"
+            value={note.body}
+            onChange={handleBody}
+          />
         </NoteForm>
       </Modal>
     </Wrapper>

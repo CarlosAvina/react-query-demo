@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 import ListItem from "./ListItem";
+import { EmptyListIcon } from "../res/icons";
 
-const Wrapper = styled.div`
+const ListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,29 +14,47 @@ const Wrapper = styled.div`
   }
 `;
 
+const EmptyListWrapper = styled.div`
+  svg {
+    width: 20rem;
+    height: 20rem;
+    margin-bottom: 40px;
+  }
+`;
+
 interface IListItem {
+  _id: string;
   title: string;
-  preview: string;
+  body: string;
 }
 
 interface Props {
-  items: Array<IListItem>;
-  onClickItem: (title: string, body: string) => void;
+  items: Array<IListItem> | undefined;
+  onClickItem: (id: string, title: string, body: string) => void;
 }
 
 const List: React.FC<Props> = ({ items, onClickItem }) => {
+  if (items?.length === 0) {
+    return (
+      <EmptyListWrapper>
+        <EmptyListIcon />
+        <h1>No haz agregado notas</h1>
+      </EmptyListWrapper>
+    );
+  }
   return (
-    <Wrapper>
-      {items.map((item) => (
+    <ListWrapper>
+      {items?.map((item) => (
         <ListItem
           className="item"
+          id={item._id}
           title={item.title}
-          preview={item.preview}
+          preview={item.body}
           onClick={onClickItem}
           key={Math.random()}
         />
       ))}
-    </Wrapper>
+    </ListWrapper>
   );
 };
 
