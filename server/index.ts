@@ -2,11 +2,11 @@ import dotenv from "dotenv";
 import express, { Response, Request } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import Note from "./data/Note";
+
 dotenv.config();
 
 const dbUri: string = process.env.MONGODB || "";
-
-import Note from "./data/Note";
 
 const app = express();
 
@@ -134,8 +134,8 @@ async function connect() {
   } catch (err) {
     console.error("Mongoose error", err);
   }
-  app.listen(3000);
-  console.log("API listening on localhost:3000");
+  app.listen(3001);
+  console.log("API listening on localhost:3001");
 }
 
 connect();
