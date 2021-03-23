@@ -11,7 +11,7 @@ import RickAndMorty from "./screens/RickAndMorty";
 const queryClient = new QueryClient();
 
 function App() {
-  const [currentApp, setCurrentApp] = React.useState("notes");
+  const [currentApp, setCurrentApp] = React.useState("rick&morty");
 
   function handleChangeApp() {
     if (currentApp === "rick&morty") setCurrentApp("notes");
